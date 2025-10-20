@@ -7,7 +7,6 @@ export const ErrorHighlighter = ({ text, errors, onErrorClick }) => {
   let lastIndex = 0;
 
   errors.forEach((error, index) => {
-    // Add text before error
     if (error.index > lastIndex) {
       segments.push({
         text: text.slice(lastIndex, error.index),
@@ -15,7 +14,6 @@ export const ErrorHighlighter = ({ text, errors, onErrorClick }) => {
       });
     }
 
-    // Add error text
     segments.push({
       text: error.text,
       type: error.type,
@@ -25,7 +23,6 @@ export const ErrorHighlighter = ({ text, errors, onErrorClick }) => {
     lastIndex = error.index + error.text.length;
   });
 
-  // Add remaining text
   if (lastIndex < text.length) {
     segments.push({
       text: text.slice(lastIndex),
