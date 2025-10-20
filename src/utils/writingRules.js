@@ -13,8 +13,7 @@ export const writingRules = {
   
   checkPassiveVoice: (text) => {
     const passivePatterns = [
-      /\b(am|is|are|was|were|be|being|been)\s+\w+ed\b/gi,
-      /\b(get|gets|got|gotten)\s+\w+ed\b/gi
+      /\b(am|is|are|was|were|be|being|been)\s+\w+ed\b/gi
     ];
     
     const matches = [];
@@ -26,7 +25,7 @@ export const writingRules = {
           index: match.index,
           type: 'passive-voice',
           suggestion: 'Consider using active voice',
-          replacement: match[0] // In real app, you'd generate active voice alternative
+          replacement: match[0]
         });
       }
     });
@@ -36,7 +35,6 @@ export const writingRules = {
   analyzeText: (text) => {
     const errors = [];
     
-    // Check for common typos
     Object.entries(writingRules.commonTypos).forEach(([wrong, correct]) => {
       const regex = new RegExp(`\\b${wrong}\\b`, 'gi');
       let match;
@@ -51,7 +49,6 @@ export const writingRules = {
       }
     });
     
-    // Check for weak words
     writingRules.weakWords.forEach(word => {
       const regex = new RegExp(`\\b${word}\\b`, 'gi');
       let match;
@@ -61,12 +58,11 @@ export const writingRules = {
           index: match.index,
           type: 'weak-word',
           suggestion: `"${word}" can often be removed for stronger writing`,
-          replacement: '' // Suggest removal
+          replacement: ''
         });
       }
     });
     
-    // Check for complex words
     Object.entries(writingRules.complexWords).forEach(([complex, simple]) => {
       const regex = new RegExp(`\\b${complex}\\b`, 'gi');
       let match;
@@ -81,7 +77,6 @@ export const writingRules = {
       }
     });
     
-    // Check passive voice
     errors.push(...writingRules.checkPassiveVoice(text));
     
     return errors.sort((a, b) => a.index - b.index);
