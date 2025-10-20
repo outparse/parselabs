@@ -27,30 +27,9 @@ export const TextEditor = () => {
     const error = errors[errorIndex];
     if (!error || !textareaRef.current) return;
 
-    // Calculate position for suggestion box
     const textarea = textareaRef.current;
-    const textBeforeError = text.substring(0, error.index);
-    const lines = textBeforeError.split('\n');
-    const currentLine = lines[lines.length - 1];
-    
-    const tempDiv = document.createElement('div');
-    tempDiv.style.cssText = `
-      position: absolute;
-      white-space: pre-wrap;
-      font: inherit;
-      visibility: hidden;
-    `;
-    tempDiv.textContent = currentLine;
-    document.body.appendChild(tempDiv);
-    
-    const width = tempDiv.offsetWidth;
-    document.body.removeChild(tempDiv);
-
     const rect = textarea.getBoundingClientRect();
-    const x = rect.left + width + 10;
-    const y = rect.top + (lines.length * 20); // Approximate line height
-
-    setSuggestionPosition({ x, y });
+    setSuggestionPosition({ x: rect.left + 20, y: rect.top + 100 });
     setSelectedError({ ...error, index: errorIndex });
   }, [errors, text]);
 
@@ -92,7 +71,6 @@ export const TextEditor = () => {
               className="w-full h-64 p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
             />
             
-            {/* Error highlights overlay */}
             <div className="absolute inset-0 p-4 pointer-events-none">
               <div className="h-full w-full font-mono text-sm whitespace-pre-wrap">
                 <ErrorHighlighter
@@ -104,7 +82,6 @@ export const TextEditor = () => {
             </div>
           </div>
 
-          {/* Suggestion Box */}
           <SuggestionBox
             error={selectedError}
             onAccept={handleAcceptSuggestion}
@@ -123,10 +100,6 @@ export const TextEditor = () => {
               <div className="flex items-center gap-1">
                 <div className="w-3 h-3 bg-yellow-100 border-yellow-300 border-2 rounded"></div>
                 <span className="text-gray-600">Word Choice</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-blue-100 border-blue-300 border-2 rounded"></div>
-                <span className="text-gray-600">Clarity</span>
               </div>
             </div>
             
